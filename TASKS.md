@@ -65,14 +65,14 @@
   - [x] UI visual testing & screenshots saved to `docs/screenshots/`
   - [x] Git commit & push
 
-- [ ] **Phase 6: Drift & Auto-Retraining**
-  - [ ] SQLite inference request logging (`inference/request_logger.py`)
-  - [ ] Drift worker job (`jobs/drift_worker.py`) comparing recent requests against reference snapshot
-  - [ ] Trigger rules: drift share > 30% of features OR any feature PSI > 0.2
-  - [ ] Automatic API trigger to retrain and register new model version
-  - [ ] `scripts/simulate_drift.py` for synthetic feature distribution shifts
-  - [ ] Verify simulated drift triggers auto-retraining and model registration
-  - [ ] Git commit & push
+- [x] **Phase 6: Drift & Auto-Retraining**
+  - [x] SQLite inference request logging (`inference/request_logger.py`)
+  - [x] Drift worker job (`jobs/drift_worker.py`) comparing recent requests against reference snapshot
+  - [x] Trigger rules: drift share > 30% of features OR any feature PSI > 0.2
+  - [x] Automatic API trigger to retrain and register new model version
+  - [x] `scripts/simulate_drift.py` for synthetic feature distribution shifts
+  - [x] Verify simulated drift triggers auto-retraining and model registration
+  - [x] Git commit & push
 
 - [ ] **Phase 7: Packaging, Tests & Benchmarks**
   - [ ] Finalize `docker-compose.yml` for zero-friction `docker compose up -d`
