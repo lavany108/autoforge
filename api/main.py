@@ -5,6 +5,7 @@ training runs, MLflow integration, and model management.
 """
 
 import os
+import json
 import shutil
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Query
@@ -280,3 +281,39 @@ def list_registered_models():
     except Exception as e:
         logger.error(f"Failed to list registered models: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/runs/{run_id}/explanation")
+def get_run_explanation(run_id: str):
+    """
+    Returns explainability links (Shapash HTML report, SHAP summary PNG)
+    and top features for a given run ID.
+    """
+    reports_dir = os.path.join(ARTIFACTS_DIR, "reports")
+    json_path = os.path.join(reports_dir, f"{run_id}_explanation.json")
+
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, "r") as f:
+                return json.load(f)
+        except Exception as e:
+            logger.error(f"Error reading explanation json: {e}")
+
+    # Fallback to checking static artifacts directly
+    html_path = os.path.join(reports_dir, f"{run_id}_shapash_report.html")
+    png_path = os.path.join(reports_dir, f"{run_id}_shap_summary.png")
+
+    if not os.path.exists(html_path) and not os.path.exists(png_path):
+        raise HTTPException(
+            status_code=404,
+            detail=f"No explainability artifacts found for run_id '{run_id}'.",
+        )
+
+    return {
+        "run_id": run_id,
+        "shap_summary_png": png_path if os.path.exists(png_path) else None,
+        "shap_summary_url": f"/artifacts/reports/{run_id}_shap_summary.png" if os.path.exists(png_path) else None,
+        "shapash_html_report": html_path if os.path.exists(html_path) else None,
+        "shapash_html_url": f"/artifacts/reports/{run_id}_shapash_report.html" if os.path.exists(html_path) else None,
+        "top_features": [],
+    }

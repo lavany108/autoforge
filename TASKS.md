@@ -38,13 +38,13 @@
   - [x] Verify baseline + tuned runs logged in MLflow with tuned >= baseline accuracy
   - [x] Git commit & push
 
-- [ ] **Phase 3: Explainability**
-  - [ ] Model explainability at training time (SHAP TreeExplainer / KernelExplainer fallback)
-  - [ ] Shapash HTML interactive report + SHAP summary plot PNG
-  - [ ] Save reports as MLflow artifacts
-  - [ ] API endpoint `GET /runs/{run_id}/explanation` returning artifact paths/links
-  - [ ] Verify report generation and visual features
-  - [ ] Git commit & push
+- [x] **Phase 3: Explainability**
+  - [x] Model explainability at training time (SHAP TreeExplainer / KernelExplainer fallback)
+  - [x] Shapash HTML interactive report + SHAP summary plot PNG
+  - [x] Save reports as MLflow artifacts
+  - [x] API endpoint `GET /runs/{run_id}/explanation` returning artifact paths/links
+  - [x] Verify report generation and visual features
+  - [x] Git commit & push
 
 - [ ] **Phase 4: Inference Service**
   - [ ] FastAPI prediction service (`POST /predict`, `GET /health`)

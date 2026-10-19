@@ -13,6 +13,7 @@ from core.pipeline_builder import (
     get_feature_names_after_preprocessing,
 )
 from core.model_search import train_autoforge_model
+from core.explainability import compute_shap_and_reports
 
 __all__ = [
     "setup_logging",
@@ -26,4 +27,5 @@ __all__ = [
     "build_full_pipeline",
     "get_feature_names_after_preprocessing",
     "train_autoforge_model",
+    "compute_shap_and_reports",
 ]

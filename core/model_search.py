@@ -439,6 +439,25 @@ def train_autoforge_model(
         uplift_metric = "rmse"
         uplift_val = round(baseline_metrics["rmse"] - tuned_metrics["rmse"], 4)  # positive means improvement
 
+    # Compute explainability (SHAP + Shapash) at training time
+    try:
+        from core.explainability import compute_shap_and_reports
+        explanation = compute_shap_and_reports(
+            pipeline=final_full_pipeline,
+            X_train_df=X_train_df,
+            X_test_df=X_test_df,
+            y_train=y_train,
+            y_test=y_test,
+            target_column=target_column,
+            task_type=task_type,
+            run_id=tuned_run_id,
+            model_name=model_name,
+            artifacts_dir=artifacts_dir,
+        )
+    except Exception as e:
+        logger.error(f"Explainability generation failed: {e}", exc_info=True)
+        explanation = None
+
     result = {
         "status": "success",
         "experiment_id": experiment_id,
@@ -458,5 +477,6 @@ def train_autoforge_model(
         "pipeline_artifact_path": latest_pipeline_path,
         "reference_data_path": ref_path,
         "metadata_path": meta_path,
+        "explanation": explanation,
     }
     return result
