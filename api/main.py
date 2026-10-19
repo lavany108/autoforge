@@ -62,6 +62,16 @@ class TaskDetectionRequest(BaseModel):
     target_column: str = Field(..., description="Target column to analyze")
 
 
+class TrainRequest(BaseModel):
+    file_path: str = Field(..., description="Path to dataset file")
+    target_column: str = Field(..., description="Target column name")
+    task_type: Optional[str] = Field(None, description="classification or regression (auto-detected if None)")
+    time_budget_secs: Optional[int] = Field(120, description="FLAML search time budget in seconds")
+    optuna_trials: Optional[int] = Field(50, description="Optuna trials for refinement")
+    model_name: Optional[str] = Field("autoforge_model", description="Registered model name in MLflow")
+    experiment_name: Optional[str] = Field("autoforge_experiments", description="MLflow experiment name")
+
+
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
@@ -181,3 +191,92 @@ def profile_dataset(req: ProfileRequest):
     except Exception as e:
         logger.error(f"Dataset profiling failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Profiling failed: {str(e)}")
+
+
+@app.post("/training/train")
+def train_model(req: TrainRequest):
+    """
+    Executes AutoForge training: baseline model, FLAML model discovery,
+    Optuna refinement, MLflow tracking, and model registration.
+    """
+    try:
+        from core.model_search import train_autoforge_model
+
+        df = load_dataset(req.file_path)
+        result = train_autoforge_model(
+            df=df,
+            target_column=req.target_column,
+            task_type=req.task_type,
+            time_budget_secs=req.time_budget_secs or 120,
+            optuna_trials=req.optuna_trials or 50,
+            model_name=req.model_name or "autoforge_model",
+            experiment_name=req.experiment_name or "autoforge_experiments",
+            artifacts_dir=ARTIFACTS_DIR,
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Model training failed: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Training failed: {str(e)}")
+
+
+@app.get("/runs")
+def list_runs(experiment_name: Optional[str] = "autoforge_experiments"):
+    """Lists MLflow runs with parameters and metrics for leaderboard display."""
+    try:
+        import mlflow
+        uri = os.getenv("MLFLOW_TRACKING_URI", f"sqlite:///{os.path.abspath(ARTIFACTS_DIR)}/mlflow.db")
+        mlflow.set_tracking_uri(uri)
+        client = mlflow.tracking.MlflowClient()
+
+        exp = client.get_experiment_by_name(experiment_name)
+        if not exp:
+            return {"runs": []}
+
+        runs = client.search_runs(experiment_ids=[exp.experiment_id], order_by=["start_time DESC"])
+        run_data = []
+        for r in runs:
+            run_data.append({
+                "run_id": r.info.run_id,
+                "run_name": r.data.tags.get("mlflow.runName", "unnamed"),
+                "stage": r.data.tags.get("stage", "unknown"),
+                "task_type": r.data.tags.get("task_type", ""),
+                "model_type": r.data.tags.get("model_type", ""),
+                "metrics": r.data.metrics,
+                "params": r.data.params,
+                "start_time": r.info.start_time,
+                "status": r.info.status,
+            })
+        return {"experiment_id": exp.experiment_id, "runs": run_data}
+    except Exception as e:
+        logger.error(f"Failed to fetch runs: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/models")
+def list_registered_models():
+    """Lists registered models and versions from MLflow model registry."""
+    try:
+        import mlflow
+        uri = os.getenv("MLFLOW_TRACKING_URI", f"sqlite:///{os.path.abspath(ARTIFACTS_DIR)}/mlflow.db")
+        mlflow.set_tracking_uri(uri)
+        client = mlflow.tracking.MlflowClient()
+
+        models = []
+        registered = client.search_registered_models()
+        for rm in registered:
+            versions = []
+            for v in rm.latest_versions:
+                versions.append({
+                    "version": v.version,
+                    "stage": v.current_stage,
+                    "run_id": v.run_id,
+                    "source": v.source,
+                })
+            models.append({
+                "name": rm.name,
+                "latest_versions": versions,
+            })
+        return {"registered_models": models}
+    except Exception as e:
+        logger.error(f"Failed to list registered models: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

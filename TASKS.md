@@ -28,15 +28,15 @@
   - [x] Verify profiling on Titanic produces HTML report with task=classification
   - [x] Git commit & push
 
-- [ ] **Phase 2: Training Engine**
-  - [ ] Scikit-learn Pipeline builder with `ColumnTransformer` (numeric impute+scale, categorical impute+one-hot)
-  - [ ] Baseline model training with default hyperparameters & MLflow logging
-  - [ ] Automated model search via FLAML with configurable time budget
-  - [ ] Optuna hyperparameter refinement on the FLAML winner
-  - [ ] Metrics logging (accuracy, F1, precision, recall for classification; RMSE, MAE, R2 for regression) + timings
-  - [ ] Single full Pipeline serialization (preprocessing + estimator) and MLflow model registration
-  - [ ] Verify baseline + tuned runs logged in MLflow with tuned >= baseline accuracy
-  - [ ] Git commit & push
+- [x] **Phase 2: Training Engine**
+  - [x] Scikit-learn Pipeline builder with `ColumnTransformer` (numeric impute+scale, categorical impute+one-hot)
+  - [x] Baseline model training with default hyperparameters & MLflow logging
+  - [x] Automated model search via FLAML with configurable time budget
+  - [x] Optuna hyperparameter refinement on the FLAML winner
+  - [x] Metrics logging (accuracy, F1, precision, recall for classification; RMSE, MAE, R2 for regression) + timings
+  - [x] Single full Pipeline serialization (preprocessing + estimator) and MLflow model registration
+  - [x] Verify baseline + tuned runs logged in MLflow with tuned >= baseline accuracy
+  - [x] Git commit & push
 
 - [ ] **Phase 3: Explainability**
   - [ ] Model explainability at training time (SHAP TreeExplainer / KernelExplainer fallback)
