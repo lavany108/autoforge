@@ -1,0 +1,37 @@
+# AutoForge .gitignore
+
+# Environment & Dependencies
+venv/
+.venv/
+env/
+*.env
+!.env.example
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Artifacts & Local Stores
+artifacts/
+!artifacts/.gitkeep
+mlruns/
+*.pkl
+*.joblib
+*.db
+*.sqlite
+*.sqlite3
+
+# Test and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs & temp files
+*.log
+logs/
+.DS_Store
+
+# Benchmarks & profiling outputs
+locust_reports/
+benchmarks/results/

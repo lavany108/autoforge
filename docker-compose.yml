@@ -1,0 +1,126 @@
+version: "3.8"
+
+services:
+  mlflow:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    container_name: autoforge-mlflow
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:////app/artifacts/mlflow.db
+      --default-artifact-root /app/artifacts/mlruns
+      --host 0.0.0.0
+      --port 5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data
+    networks:
+      - autoforge-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    container_name: autoforge-api
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - INFERENCE_URL=http://inference:8001
+      - SQLITE_DB_PATH=/app/artifacts/autoforge.db
+      - ARTIFACTS_DIR=/app/artifacts
+      - DATA_DIR=/app/data
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data
+      - ./core:/app/core
+      - ./api:/app/api
+    depends_on:
+      - mlflow
+    networks:
+      - autoforge-net
+
+  inference:
+    build:
+      context: .
+      dockerfile: ./inference/Dockerfile
+    container_name: autoforge-inference
+    command: uvicorn inference.main:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - SQLITE_DB_PATH=/app/artifacts/autoforge.db
+      - ARTIFACTS_DIR=/app/artifacts
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./core:/app/core
+      - ./inference:/app/inference
+    depends_on:
+      - mlflow
+    networks:
+      - autoforge-net
+
+  ui:
+    build:
+      context: .
+      dockerfile: ./ui/Dockerfile
+    container_name: autoforge-ui
+    command: streamlit run ui/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+      - INFERENCE_URL=http://inference:8001
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - SQLITE_DB_PATH=/app/artifacts/autoforge.db
+      - ARTIFACTS_DIR=/app/artifacts
+      - DATA_DIR=/app/data
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data
+      - ./ui:/app/ui
+    depends_on:
+      - api
+      - inference
+    networks:
+      - autoforge-net
+
+  drift-worker:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    container_name: autoforge-drift-worker
+    command: python -m jobs.drift_worker
+    environment:
+      - API_URL=http://api:8000
+      - INFERENCE_URL=http://inference:8001
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - SQLITE_DB_PATH=/app/artifacts/autoforge.db
+      - ARTIFACTS_DIR=/app/artifacts
+      - DRIFT_CHECK_INTERVAL_SECONDS=300
+      - DRIFT_SHARE_THRESHOLD=0.30
+      - DRIFT_PSI_THRESHOLD=0.20
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./jobs:/app/jobs
+      - ./core:/app/core
+    depends_on:
+      - api
+      - inference
+    networks:
+      - autoforge-net
+
+networks:
+  autoforge-net:
+    driver: bridge
