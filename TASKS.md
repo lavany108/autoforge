@@ -46,13 +46,13 @@
   - [x] Verify report generation and visual features
   - [x] Git commit & push
 
-- [ ] **Phase 4: Inference Service**
-  - [ ] FastAPI prediction service (`POST /predict`, `GET /health`)
-  - [ ] Dynamic loading of registered models from MLflow
-  - [ ] Pydantic input/output schemas with probability support
-  - [ ] Per-request latency logging and request storage for drift monitoring
-  - [ ] Verify deployment and curl `/predict` with test payloads
-  - [ ] Git commit & push
+- [x] **Phase 4: Inference Service**
+  - [x] FastAPI prediction service (`POST /predict`, `GET /health`)
+  - [x] Dynamic loading of registered models from MLflow
+  - [x] Pydantic input/output schemas with probability support
+  - [x] Per-request latency logging and request storage for drift monitoring
+  - [x] Verify deployment and curl `/predict` with test payloads
+  - [x] Git commit & push
 
 - [ ] **Phase 5: Streamlit UI**
   - [ ] Multi-page / tabbed modern dashboard:
