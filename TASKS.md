@@ -20,13 +20,13 @@
   - [x] Verify core dependencies import cleanly
   - [x] Git commit & push
 
-- [ ] **Phase 1: Data & Profiling**
-  - [ ] Dataset ingestion & validation API (`/datasets/upload`, `/datasets/profile`)
-  - [ ] `ydata-profiling` HTML report generation and artifact saving
-  - [ ] Task detection heuristic (classification vs regression with confidence score)
-  - [ ] Titanic seed dataset committed (`data/titanic.csv`), `scripts/download_data.py`
-  - [ ] Verify profiling on Titanic produces HTML report with task=classification
-  - [ ] Git commit & push
+- [x] **Phase 1: Data & Profiling**
+  - [x] Dataset ingestion & validation API (`/datasets/upload`, `/datasets/profile`)
+  - [x] `ydata-profiling` HTML report generation and artifact saving
+  - [x] Task detection heuristic (classification vs regression with confidence score)
+  - [x] Titanic seed dataset committed (`data/titanic.csv`), `scripts/download_data.py`
+  - [x] Verify profiling on Titanic produces HTML report with task=classification
+  - [x] Git commit & push
 
 - [ ] **Phase 2: Training Engine**
   - [ ] Scikit-learn Pipeline builder with `ColumnTransformer` (numeric impute+scale, categorical impute+one-hot)
