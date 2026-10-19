@@ -14,6 +14,7 @@ from core.pipeline_builder import (
 )
 from core.model_search import train_autoforge_model
 from core.explainability import compute_shap_and_reports
+from core.drift import check_and_evaluate_drift, calculate_psi
 
 __all__ = [
     "setup_logging",
@@ -28,4 +29,6 @@ __all__ = [
     "get_feature_names_after_preprocessing",
     "train_autoforge_model",
     "compute_shap_and_reports",
+    "check_and_evaluate_drift",
+    "calculate_psi",
 ]

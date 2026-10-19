@@ -54,16 +54,16 @@
   - [x] Verify deployment and curl `/predict` with test payloads
   - [x] Git commit & push
 
-- [ ] **Phase 5: Streamlit UI**
-  - [ ] Multi-page / tabbed modern dashboard:
+- [x] **Phase 5: Streamlit UI**
+  - [x] Multi-page / tabbed modern dashboard:
     1. Upload & Profiling (file uploader, task heuristic, embedded profile report)
     2. Training (dataset selector, budget slider, live training progress)
     3. Leaderboard (baseline vs tuned comparison table from MLflow)
     4. Explainability (embedded Shapash HTML + SHAP summary plot)
     5. Deployment (model registry version selector, one-click deploy to inference service)
     6. Monitoring (Evidently drift metrics & retrain history)
-  - [ ] UI visual testing & screenshots saved to `docs/screenshots/`
-  - [ ] Git commit & push
+  - [x] UI visual testing & screenshots saved to `docs/screenshots/`
+  - [x] Git commit & push
 
 - [ ] **Phase 6: Drift & Auto-Retraining**
   - [ ] SQLite inference request logging (`inference/request_logger.py`)
