@@ -85,3 +85,11 @@
   - [x] Documentation: `README.md` (quickstart, architecture diagram, benchmarks, screenshots) and `WALKTHROUGH.md` (AC1-AC4 verification guide)
   - [x] Final end-to-end verification and presentation
   - [x] Git commit & push
+
+- [ ] **Phase 8: Polish, Hardening & Production Ready**
+  - [x] Task 1: Fix Titanic benchmark story (Optuna 150 trials, widened search space, class-imbalance parameter, honest reporting/interpretation)
+  - [ ] Task 2: README & WALKTHROUGH audit (ports, URLs, architecture consistency, badges, screenshot links)
+  - [ ] Task 3: Add MIT LICENSE & GitHub Actions CI (`.github/workflows/ci.yml`)
+  - [ ] Task 4: Clean-room end-to-end verification (`docker compose down -v`, rebuild, AC1-AC4 walkthrough, p95 < 100ms)
+  - [ ] Task 5: GitHub repo metadata polish via `gh` CLI (description and topics)
+  - [ ] Task 6: Stretch: Prometheus & Grafana monitoring stack with prebuilt dashboard

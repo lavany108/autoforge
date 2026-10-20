@@ -43,8 +43,8 @@ def run_benchmarks() -> str:
         df=df_titanic,
         target_column="Survived",
         task_type="classification",
-        time_budget_secs=20,
-        optuna_trials=15,
+        time_budget_secs=30,
+        optuna_trials=150,
         model_name="benchmark_titanic",
         experiment_name="benchmark_experiments",
     )
