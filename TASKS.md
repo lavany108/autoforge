@@ -74,11 +74,14 @@
   - [x] Verify simulated drift triggers auto-retraining and model registration
   - [x] Git commit & push
 
-- [ ] **Phase 7: Packaging, Tests & Benchmarks**
-  - [ ] Finalize `docker-compose.yml` for zero-friction `docker compose up -d`
-  - [ ] Unit & integration test suite (`tests/` with pytest)
-  - [ ] Benchmark runner (`benchmarks/benchmark_run.py`) on Titanic + California Housing
-  - [ ] Locust load test script (`benchmarks/locustfile.py`) measuring p95 latency
-  - [ ] Documentation: `README.md` and `WALKTHROUGH.md`
-  - [ ] Final end-to-end verification and presentation
-  - [ ] Git commit & push
+- [x] **Phase 7: Packaging, Tests & Benchmarks**
+  - [x] Finalize `docker-compose.yml` for zero-friction `docker compose up -d` (all 5 microservices verified)
+  - [x] Unit & integration test suite (`tests/` with pytest): 13/13 passing
+  - [x] Benchmark runner (`benchmarks/benchmark_run.py`) on Titanic + California Housing:
+    - Titanic: Baseline 0.8101 -> Tuned 0.8101 (XGBoost)
+    - California Housing: Baseline 0.5740 -> Tuned 0.5210 (+0.0530 RMSE reduction, 9.2% improvement, LGBM)
+  - [x] Locust load test script (`benchmarks/locustfile.py`) measuring p95 latency:
+    - 1,930 requests, 130 req/s, 0% failure rate, p50=37ms, p95=89ms
+  - [x] Documentation: `README.md` (quickstart, architecture diagram, benchmarks, screenshots) and `WALKTHROUGH.md` (AC1-AC4 verification guide)
+  - [x] Final end-to-end verification and presentation
+  - [x] Git commit & push
